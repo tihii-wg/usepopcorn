@@ -1,6 +1,10 @@
 import "./App.css";
+import { useState } from "react";
 import { Main } from "./Main";
+import { MovieList } from "./MovieList";
 import { Navbar } from "./Navbar";
+import { Box } from "./Box";
+import { WatchedMoviesList } from "./WatchedMoviesList";
 
 const tempMovieData = [
   {
@@ -50,10 +54,19 @@ const tempWatchedData = [
 ];
 
 function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+  const [watched, setWatched] = useState(tempWatchedData);
   return (
     <div className="App">
       <Navbar />
-      <Main movies={tempMovieData} />
+      <Main>
+        <Box>
+          <MovieList movies={movies} />
+        </Box>
+        <Box>
+          <WatchedMoviesList movies={watched} />
+        </Box>
+      </Main>
     </div>
   );
 }
