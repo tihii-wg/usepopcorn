@@ -5,6 +5,7 @@ import { MovieList } from "./MovieList";
 import { Navbar } from "./Navbar";
 import { Box } from "./Box";
 import { WatchedMoviesList } from "./WatchedMoviesList";
+import { WatchedSummary } from "./WatchedSummary";
 
 const tempMovieData = [
   {
@@ -53,6 +54,9 @@ const tempWatchedData = [
   },
 ];
 
+export const average = (arr) =>
+  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+
 function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
@@ -64,11 +68,13 @@ function App() {
           <MovieList movies={movies} />
         </Box>
         <Box>
-          <WatchedMoviesList movies={watched} />
+          <WatchedSummary watched={watched} />
+          <WatchedMoviesList watched={watched} />
         </Box>
       </Main>
     </div>
   );
 }
+
 
 export default App;

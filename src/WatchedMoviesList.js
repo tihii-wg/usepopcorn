@@ -1,9 +1,9 @@
 import { WatchedMovie } from "./WatchedMovie";
 
-export function WatchedMoviesList({ movies }) {
+export function WatchedMoviesList({ watched }) {
   return (
     <ul className="list">
-      {movies.map((movie) => (
+      {watched.map((movie) => (
         <WatchedMovie movie={movie} key={movie.imdbID} />
       ))}
     </ul>
