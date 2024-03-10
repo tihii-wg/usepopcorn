@@ -1,11 +1,14 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Main } from "./Main";
 import { MovieList } from "./MovieList";
 import { Navbar } from "./Navbar";
 import { Box } from "./Box";
 import { WatchedMoviesList } from "./WatchedMoviesList";
 import { WatchedSummary } from "./WatchedSummary";
+import { Search } from "./Search";
+import { NumResult } from "./NumResult";
+import { Loader } from "./Loader";
 
 const tempMovieData = [
   {
@@ -56,16 +59,50 @@ const tempWatchedData = [
 
 export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+const key = "e0d45d02";
 
 function App() {
-  const [movies, setMovies] = useState(tempMovieData);
+  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
+  const [query, setQuery] = useState("interstellar");
+  const [isLOading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function FecthingData() {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${key}&s=${query}`
+        );
+
+        if (!res.ok) throw new Error("Sumthing wrong");
+
+        const data = await res.json();
+
+        if (data.Response === "False") throw new Error("Movie not found");
+
+        setMovies(data.Search);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    FecthingData();
+  }, []);
+
   return (
-    <div className="App">
-      <Navbar />
+    <div className="app">
+      <Navbar>
+        <Search query={query} setQuery={setQuery} />
+        <NumResult movies={movies} />
+      </Navbar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLOading && <Loader />}
+          {error && <ErrorMessage message={error} />}
+          {!error && !isLOading && <MovieList movies={movies} />}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
@@ -76,5 +113,13 @@ function App() {
   );
 }
 
-
 export default App;
+
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>⛔</span>
+      {message}
+    </p>
+  );
+}
