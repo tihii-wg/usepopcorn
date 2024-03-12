@@ -64,7 +64,7 @@ const key = "e0d45d02";
 function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
-  const [query, setQuery] = useState("interstellar");
+  const [query, setQuery] = useState("test");
   const [isLOading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -90,7 +90,7 @@ function App() {
       }
     }
     FecthingData();
-  }, []);
+  }, [query]);
 
   return (
     <div className="app">
