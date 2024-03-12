@@ -62,35 +62,42 @@ export const average = (arr) =>
 const key = "e0d45d02";
 
 function App() {
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState(tempWatchedData);
-  const [query, setQuery] = useState("test");
+  const [watched, setWatched] = useState([]);
   const [isLOading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    async function FecthingData() {
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${key}&s=${query}`
-        );
+  useEffect(
+    function () {
+      async function FecthingData() {
+        try {
+          setError("");
+          setIsLoading(true);
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${key}&s=${query}`
+          );
 
-        if (!res.ok) throw new Error("Sumthing wrong");
+          if (!res.ok) throw new Error("Sumthing wrong");
 
-        const data = await res.json();
+          const data = await res.json();
 
-        if (data.Response === "False") throw new Error("Movie not found");
+          if (data.Response === "False") throw new Error("Movie not found");
 
-        setMovies(data.Search);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    FecthingData();
-  }, [query]);
+          setMovies(data.Search);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+		}
+		  
+
+      FecthingData();
+      console.log(query);
+    },
+	  [query]
+  );
 
   return (
     <div className="app">
