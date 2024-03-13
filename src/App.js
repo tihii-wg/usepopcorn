@@ -9,6 +9,8 @@ import { WatchedSummary } from "./WatchedSummary";
 import { Search } from "./Search";
 import { NumResult } from "./NumResult";
 import { Loader } from "./Loader";
+import { ErrorMessage } from "./ErrorMessage";
+import { SelectedMovie } from "./SelectedMovie";
 
 const tempMovieData = [
   {
@@ -67,13 +69,14 @@ function App() {
   const [watched, setWatched] = useState([]);
   const [isLOading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
 
   useEffect(
     function () {
       async function FecthingData() {
         try {
-          setError("");
           setIsLoading(true);
+          setError("");
           const res = await fetch(
             `http://www.omdbapi.com/?apikey=${key}&s=${query}`
           );
@@ -90,15 +93,28 @@ function App() {
         } finally {
           setIsLoading(false);
         }
-		}
-		  
+      }
+
+      if (query.length < 3) {
+        setError("");
+        setMovies([]);
+        return;
+      }
 
       FecthingData();
-      console.log(query);
     },
-	  [query]
+    [query]
   );
 
+  const setMovieIdHandler = (id) => {
+    setSelectedMovieId((selectedId) => (selectedId === id ? null : id));
+  };
+
+  const cancelSelectedMovieHandler = () => {
+	setSelectedMovieId(null);
+  };
+
+  console.log(movies);
   return (
     <div className="app">
       <Navbar>
@@ -109,11 +125,22 @@ function App() {
         <Box>
           {isLOading && <Loader />}
           {error && <ErrorMessage message={error} />}
-          {!error && !isLOading && <MovieList movies={movies} />}
+          {!error && !isLOading && (
+            <MovieList movies={movies} setMovieIdHandler={setMovieIdHandler} />
+          )}
         </Box>
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} />
+          {selectedMovieId ? (
+            <SelectedMovie
+              selectedMovieId={selectedMovieId}
+              cancelSelectedMovieHandler={cancelSelectedMovieHandler}
+            />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </div>
@@ -121,12 +148,3 @@ function App() {
 }
 
 export default App;
-
-function ErrorMessage({ message }) {
-  return (
-    <p className="error">
-      <span>⛔</span>
-      {message}
-    </p>
-  );
-}
