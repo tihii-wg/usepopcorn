@@ -11,6 +11,7 @@ import { NumResult } from "./NumResult";
 import { Loader } from "./Loader";
 import { ErrorMessage } from "./ErrorMessage";
 import { SelectedMovie } from "./SelectedMovie";
+import { key } from "./key";
 
 const tempMovieData = [
   {
@@ -61,7 +62,6 @@ const tempWatchedData = [
 
 export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
-const key = "e0d45d02";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -111,10 +111,9 @@ function App() {
   };
 
   const cancelSelectedMovieHandler = () => {
-	setSelectedMovieId(null);
+    setSelectedMovieId(null);
   };
 
-  console.log(movies);
   return (
     <div className="app">
       <Navbar>
@@ -132,6 +131,8 @@ function App() {
         <Box>
           {selectedMovieId ? (
             <SelectedMovie
+              key={key}
+              movies={movies}
               selectedMovieId={selectedMovieId}
               cancelSelectedMovieHandler={cancelSelectedMovieHandler}
             />
