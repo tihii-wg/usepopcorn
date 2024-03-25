@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { key } from "./key";
+import { StarRating } from "./StarRating";
 
 export function SelectedMovie({
   selectedMovieId,
   cancelSelectedMovieHandler,
+  handleAddWatchedMovie,
   movies,
 }) {
   const [movie, setMovie] = useState({});
+  const [movieRating, setMovieRating] = useState("");
 
   const {
     Title: title,
@@ -32,7 +35,6 @@ export function SelectedMovie({
           );
           const data = await res.json();
           setMovie(data);
-          console.log(movie);
           if (!res.ok) throw new Error("error");
         } catch (err) {
           console.log(err.message);
@@ -67,6 +69,15 @@ export function SelectedMovie({
         </div>
       </header>
       <section>
+        <div className="rating">
+          <StarRating
+            maxRating={10}
+            size="15"
+            setMovieRating={setMovieRating}
+          />
+          {movieRating && <button className="addButton" onClick={() => handleAddWatchedMovie(movie)}>Add Movie To list..</button>
+          }
+        </div>
         <p>
           <em>{plot}</em>
         </p>

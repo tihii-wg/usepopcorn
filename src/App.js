@@ -114,6 +114,11 @@ function App() {
     setSelectedMovieId(null);
   };
 
+  const handleAddWatchedMovie = (selectedMovie) => {
+    setWatched((movie) => [...movie, selectedMovie]);
+    setSelectedMovieId(null);
+  };
+
   return (
     <div className="app">
       <Navbar>
@@ -135,6 +140,7 @@ function App() {
               movies={movies}
               selectedMovieId={selectedMovieId}
               cancelSelectedMovieHandler={cancelSelectedMovieHandler}
+              handleAddWatchedMovie={handleAddWatchedMovie}
             />
           ) : (
             <>
