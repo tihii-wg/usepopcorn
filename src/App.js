@@ -152,7 +152,6 @@ function App() {
               <WatchedSummary watched={watched} />
               <WatchedMoviesList
                 watched={watched}
-                key={watched.imdbID}
                 deleteWachedMovie={deleteWachedMovie}
               />
             </>
