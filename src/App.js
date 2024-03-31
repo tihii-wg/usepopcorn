@@ -64,10 +64,10 @@ export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("inception");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
-  const [isLOading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedMovieId, setSelectedMovieId] = useState(null);
 
@@ -119,6 +119,11 @@ function App() {
     setSelectedMovieId(null);
   };
 
+  const deleteWachedMovie = (id) => {
+    setWatched((watched) => watched.filter((watched) => watched.imdbID !== id));
+  };
+  debugger;
+
   return (
     <div className="app">
       <Navbar>
@@ -127,9 +132,9 @@ function App() {
       </Navbar>
       <Main>
         <Box>
-          {isLOading && <Loader />}
+          {isLoading && <Loader />}
           {error && <ErrorMessage message={error} />}
-          {!error && !isLOading && (
+          {!error && !isLoading && (
             <MovieList movies={movies} setMovieIdHandler={setMovieIdHandler} />
           )}
         </Box>
@@ -137,7 +142,7 @@ function App() {
           {selectedMovieId ? (
             <SelectedMovie
               key={key}
-              movies={movies}
+              watched={watched}
               selectedMovieId={selectedMovieId}
               cancelSelectedMovieHandler={cancelSelectedMovieHandler}
               handleAddWatchedMovie={handleAddWatchedMovie}
@@ -145,7 +150,11 @@ function App() {
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} />
+              <WatchedMoviesList
+                watched={watched}
+                key={watched.imdbID}
+                deleteWachedMovie={deleteWachedMovie}
+              />
             </>
           )}
         </Box>

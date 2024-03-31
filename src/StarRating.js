@@ -20,6 +20,11 @@ export function StarRating({
   const [rating, setRating] = useState(0);
   const [tempRating, setTempRating] = useState(0);
 
+  const handleRate = (rating) => {
+    setRating(rating);
+    setMovieRating(rating);
+  };
+
   const textStyle = {
     lineHight: "1",
     marginBotom: "5px",
@@ -33,8 +38,7 @@ export function StarRating({
           <Star
             key={i}
             onRate={() => {
-              setRating(i + 1);
-              setMovieRating(i + 1);
+              handleRate(i + 1);
             }}
             full={tempRating >= i + 1 || rating >= i + 1}
             onHoverin={() => setTempRating(i + 1)}
