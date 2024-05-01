@@ -122,7 +122,6 @@ function App() {
   const deleteWachedMovie = (id) => {
     setWatched((watched) => watched.filter((watched) => watched.imdbID !== id));
   };
-  debugger;
 
   return (
     <div className="app">

@@ -64,14 +64,27 @@ export function SelectedMovie({
     },
     [selectedMovieId]
   );
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = title;
+
+      return function () {
+        document.title = "usePopcorn";
+      };
+    },
+    [title]
+  );
 
   const isWatched = watched.find(
     (watched) => watched.imdbID === selectedMovieId
   );
   //	watched
   // .map((movie) => movie.imdbID)
-	// .includes(selectedMovieId);
-	const watchedUserRating = watched.find(watched=>watched.imdbID===selectedMovieId)?.userRating
+  // .includes(selectedMovieId);
+  const watchedUserRating = watched.find(
+    (watched) => watched.imdbID === selectedMovieId
+  )?.userRating;
 
   return (
     <div className="details">
@@ -112,7 +125,10 @@ export function SelectedMovie({
                   )}
                 </>
               ) : (
-                <p>in list,rated {watchedUserRating}<span>⭐</span></p>
+                <p>
+                  in list,rated {watchedUserRating}
+                  <span>⭐</span>
+                </p>
               )}
             </div>
             <p>
