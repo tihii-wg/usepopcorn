@@ -64,47 +64,12 @@ export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 function App() {
-  const [query, setQuery] = useState("inception");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedMovieId, setSelectedMovieId] = useState(null);
-
-  useEffect(
-    function () {
-      async function FecthingData() {
-        try {
-          setIsLoading(true);
-          setError("");
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${key}&s=${query}`
-          );
-
-          if (!res.ok) throw new Error("Sumthing wrong");
-
-          const data = await res.json();
-
-          if (data.Response === "False") throw new Error("Movie not found");
-
-          setMovies(data.Search);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (query.length < 3) {
-        setError("");
-        setMovies([]);
-        return;
-      }
-
-      FecthingData();
-    },
-    [query]
-  );
 
   const setMovieIdHandler = (id) => {
     setSelectedMovieId((selectedId) => (selectedId === id ? null : id));
@@ -122,6 +87,52 @@ function App() {
   const deleteWachedMovie = (id) => {
     setWatched((watched) => watched.filter((watched) => watched.imdbID !== id));
   };
+
+  useEffect(
+    function () {
+      const controller = new AbortController();
+
+      async function fecthingData() {
+        try {
+          setIsLoading(true);
+          setError("");
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${key}&s=${query}`,
+            { signal: controller.signal }
+          );
+
+          if (!res.ok) throw new Error("Sumthing wrong");
+
+          const data = await res.json();
+
+          if (data.Response === "False") throw new Error("Movie not found");
+
+          setMovies(data.Search);
+          setError("");
+        } catch (err) {
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      }
+
+      if (query.length < 3) {
+        setError("");
+        setMovies([]);
+        return;
+      }
+
+      cancelSelectedMovieHandler();
+      fecthingData();
+
+      return function () {
+        controller.abort();
+      };
+    },
+    [query]
+  );
 
   return (
     <div className="app">

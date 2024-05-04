@@ -51,7 +51,6 @@ export function SelectedMovie({
           setMovie(data);
           if (!res.ok) throw new Error("error");
         } catch (err) {
-          console.log(err.message);
           // const selectedMovie = movies.find(
           //   (movie) => movie.imdbID === selectedMovieId
           // );
@@ -64,6 +63,7 @@ export function SelectedMovie({
     },
     [selectedMovieId]
   );
+
   useEffect(
     function () {
       if (!title) return;
@@ -75,6 +75,22 @@ export function SelectedMovie({
     },
     [title]
   );
+
+  useEffect(
+	function () {
+	  function callBack(e) {
+		 if (e.code === "Escape") {
+			cancelSelectedMovieHandler();
+		 }
+	  }
+	  document.addEventListener("keydown", callBack);
+
+	  return function () {
+		 document.removeEventListener("keydown", callBack);
+	  };
+	},
+	[cancelSelectedMovieHandler]
+ );
 
   const isWatched = watched.find(
     (watched) => watched.imdbID === selectedMovieId
