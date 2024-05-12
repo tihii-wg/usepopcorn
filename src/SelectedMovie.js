@@ -64,6 +64,7 @@ export function SelectedMovie({
     [selectedMovieId]
   );
 
+
   useEffect(
     function () {
       if (!title) return;
@@ -77,20 +78,20 @@ export function SelectedMovie({
   );
 
   useEffect(
-	function () {
-	  function callBack(e) {
-		 if (e.code === "Escape") {
-			cancelSelectedMovieHandler();
-		 }
-	  }
-	  document.addEventListener("keydown", callBack);
+    function () {
+      function callBack(e) {
+        if (e.code === "Escape") {
+          cancelSelectedMovieHandler();
+        }
+      }
+      document.addEventListener("keydown", callBack);
 
-	  return function () {
-		 document.removeEventListener("keydown", callBack);
-	  };
-	},
-	[cancelSelectedMovieHandler]
- );
+      return function () {
+        document.removeEventListener("keydown", callBack);
+      };
+    },
+    [cancelSelectedMovieHandler]
+  );
 
   const isWatched = watched.find(
     (watched) => watched.imdbID === selectedMovieId
