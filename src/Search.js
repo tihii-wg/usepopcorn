@@ -17,7 +17,7 @@ export function Search({ query, setQuery }) {
     return function () {
       document.removeEventListener("keydown", callback);
     };
-  }, []);
+  }, [setQuery]);
 
   return (
     <div>

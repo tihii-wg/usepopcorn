@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { key } from "./key";
 import { StarRating } from "./StarRating";
 import { Loader } from "./Loader";
@@ -12,6 +12,15 @@ export function SelectedMovie({
   const [movie, setMovie] = useState({});
   const [movieRating, setMovieRating] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const countRef = useRef(0);
+
+  useEffect(
+    function () {
+      if (movieRating) countRef.current++;
+    },
+    [movieRating]
+  );
 
   const {
     Title: title,
@@ -35,6 +44,7 @@ export function SelectedMovie({
       runtime: Number(runtime.split(" ").at(0)),
       imdbRating: Number(imdbRating),
       userRating: movieRating,
+      countRatingDecition: countRef.current,
     };
     handleAddWatchedMovie(newMovie);
   };
@@ -63,7 +73,6 @@ export function SelectedMovie({
     },
     [selectedMovieId]
   );
-
 
   useEffect(
     function () {
